@@ -25,15 +25,11 @@ I also found that I should probably stick to using the intended tools for the jo
 
 It was so much fun to try to push tkinter to its limits though.
 
----
-
-## Hackathon Context
-
 The prompt for the hackathon was "Ripple Effect", which may give context on some game features and some points in the synopsis.
 
 ---
 
-## Submission Synopsis
+## Synopsis
 
 Here is the synopsis I presented in my submission:
 
