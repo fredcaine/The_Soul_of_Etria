@@ -1,4 +1,4 @@
-# The Soul of Etria – Project Report
+# The Soul of Etria
 
 ## Credits
 
