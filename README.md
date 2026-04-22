@@ -1,7 +1,5 @@
 # The Soul of Etria
 
-## Credits
-
 Credits for this project go to:  
 Fredrick Farouk -- Solo Coder and Manager,  
 Hassan Saheb -- Main Spriter and Voice Actor, and  
@@ -53,17 +51,11 @@ The game contains many special features, such as:
 - The soundtrack AND game icon adapts to the player’s _SOUL_ level (explained below), reinforcing the game’s atmosphere,  
 - and many more.  
 
----
-
-## Core Mechanic: _SOUL_ System
-
 The key feature of the game, as indicated by the title, is the "_SOUL_" feature. This is a "health bar" of sorts that sits at the top of the screen. The player's SOUL heavily affects generation with less water, hotter biomes, darker and redder colours, more dangerous surroundings and more enemies at lower _SOUL_.  
 
 Further leaning into the "Ripple Effect", losing or gaining SOUL (from healing potions, etc.) sends out a "ripple". This is an effect that moves directly through the ground in a different colour depending on the player's current _SOUL_. It is difficult to describe in the email, however it is more clear in the trailer and the actual game. It serves as the player's main attack on bosses and enemies.
 
 To avoid making the synopsis too technical, I will not go into details on how the infinite world is stored while avoiding (heavy) lag, how exactly the OpenSimplex noise generation is implemented, how NPCs, Bosses and Items are made into general class structures for ease of continuation, how the game updates continuously without a general builtin update method in python, or anything else to that effect. For those types of details, see the code and my (sometimes) helpful comments.
-
----
 
 In general, the game has too many features to discuss in a short synopsis, but hopefully the main purpose has been outlined here. More detail is shown in the trailer and gameplay video, and of course, you can always use the executable to play the game yourself. Have fun!
 
