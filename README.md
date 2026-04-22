@@ -23,7 +23,7 @@ There are a few things I learned, one of which being that I should maintain mult
 
 I also found that I should probably stick to using the intended tools for the job; Python's tkinter is not very fast, and for a 2D game, that was an issue.  
 
-It was so much fun to try to push tkinter to its limits though.
+It was a lot of fun to try to push tkinter to its limits though.
 
 The prompt for the hackathon was "Ripple Effect", which may give context on some game features and some points in the synopsis.
 
