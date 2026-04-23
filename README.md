@@ -69,7 +69,8 @@ e) take textual input from a player, and
 f) output sound.
 
 To do this, I came up with a system. Here is an example of calling an NPC class:
-    hassan = NPC(
+
+`hassan = NPC(
         name="hassan",
         pos=hassan_spawn_point,
         sprite_name_normal="hassan_sprite_normal",
@@ -115,7 +116,7 @@ To do this, I came up with a system. Here is an example of calling an NPC class:
     prox1=20,
     prox2=7,
     chosen_adder="hassan_betray_choice"
-)
+)`
 
 As you can see, the dialogue is implemented by a massive system of nested dictionaries, including at the highest level full dialogues and at the lowest level individual strings, with each string encoding the speaker, whether audio should play and whether an input is required (more specifically, what exactly is required in that input to avoid security errors, and a message if an input is invalid).
 The exact way I implemented all of this can be seen in the `NPC` class.
