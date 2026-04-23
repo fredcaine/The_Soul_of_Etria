@@ -40,7 +40,7 @@ Rippling was quite complicated. To make it look good, I wanted the ripple to mov
 
 Making the inside of the change colours and zoom out was even more complicated, as in the same instance a certain biome could have two different colours. The key idea to resolve this was to generate a new map for the current chunk (with the updated soul colours) and pass that into the ripple. As the ripple moves, the old circumference (after the circumference expands) has every cell inside it be replaced from the map to the new map. This continues until the ripple reaches the farthest corner. The issue with this was a minor bug where moving into a different chunk while the ripple is active leads to the new map replacing the old map in the *wrong position*, leading to a visual bug. I decided that patching this would take up too much time that could be spent adding features.
 
-Furthermore, _SOUL_ changing also affect the world generation itself, not just the overlay. The biome of an area actually changes (height is increased and moisture is decreased), leading to more barren areas at very low _SOUL_.
+Furthermore, _SOUL_ changing also affects the world generation itself, not just the overlay. The biome of an area actually changes (height is increased and moisture is decreased), leading to more barren areas at very low _SOUL_. This is part of the "new map".
 
 Regarding collision detection, I used some basic trigonometry to find the circumference of the circle. At every point on the chunk, we calculate its relative position to the ripple's origin, find the hypoteneuse and see if its within the thickness of the circle to the radius.
 
