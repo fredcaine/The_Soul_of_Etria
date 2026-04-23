@@ -15,13 +15,122 @@ This project took a lot of my time, roughly four hours per day for several weeks
 
 ---
 
+## Technical Overview
+
+Many features in the game were at least somewhat challenging to implement, so here are some descriptions.
+
+---
+
+### Procedural Generation
+
+A highlight of the game was the biome generation using noise maps.
+
+I created four noise maps: height, moisture, temperature, and latitude.
+Originally, I used Perlin noise, but realised its edges were too jagged and it did not make for clean biome transitions, making me switch to OpenSimplex noise.
+
+Then, I constructed a classifier to take in the four noise values at a point and determine the best biome. This was hardcoded with several if statements.
+
+After, the biomes are converted into the colour of the cell on the world grid. This conversion is dependent on the current *SOUL* value.
+
+---
+
+### _SOUL_ and Rippling
+
+Rippling was quite complicated. To make it look good, I wanted the ripple to move through the ground to the enemy, which required several functions to avoid this glitching out terrain generation, and to allow collision detection with these ripples.
+
+Making the inside of the change colours and zoom out was even more complicated, as in the same instance a certain biome could have two different colours. The key idea to resolve this was to generate a new map for the current chunk (with the updated soul colours) and pass that into the ripple. As the ripple moves, the old circumference (after the circumference expands) has every cell inside it be replaced from the map to the new map. This continues until the ripple reaches the farthest corner. The issue with this was a minor bug where moving into a different chunk while the ripple is active leads to the new map replacing the old map in the *wrong position*, leading to a visual bug. I decided that patching this would take up too much time that could be spent adding features.
+
+Furthermore, _SOUL_ changing also affect the world generation itself, not just the overlay. The biome of an area actually changes (height is increased and moisture is decreased), leading to more barren areas at very low _SOUL_.
+
+Regarding collision detection, I used some basic trigonometry to find the circumference of the circle. At every point on the chunk, we calculate its relative position to the ripple's origin, find the hypoteneuse and see if its within the thickness of the circle to the radius.
+
+Another instance of trigonometry helping out was (π+arctan2(dy,-dx))mod2π to find the direction to the NPC in the Arrow class.
+
+---
+
+### Sound and Event Handling
+
+Such a complex game was not meant to be made in `tkinter`, so lag was expected. However, since many different things were going on simultaneously, I needed to utilise `tkinter`'s after ID system. Essentially every moving object has its own after ID.
+
+Many issues arose from garbage collection not collecting things when I wanted it to, and forgetting to clear the after ID was one of the reasons for this. To solve this, I imported the `gc` module to tell me when things were still stored in memory.
+
+Regarding sound, I allotted channels for each specific task. Soundtracks went into channel 0, NPC dialogue went to channel 1, sound effects went into channel 2, boss damage sounds went into channel 3 and cutscene audios used channel 4.
+
+---
+
+### NPC Dialogue
+
+This was probably the most annoying game feature to implement. Firstly, for the sake of the plot my teammates had come up with, I needed each NPC to
+a) have multiple dialogues,
+b) have branching trees of potential dialogue depending on the player's decisions,
+c) allow the player to speak in response to the NPC,
+d) have branching trees *in the middle of one dialogue* depending on a player's decision,
+e) take textual input from a player, and
+f) output sound.
+
+To do this, I came up with a system. Here is an example of calling an NPC class:
+    hassan = NPC(
+        name="hassan",
+        pos=hassan_spawn_point,
+        sprite_name_normal="hassan_sprite_normal",
+        sprite_name_flipped="hassan_sprite_flipped",
+        dialogue_lines = [[
+        {"text": "Woah! Is that an adventurer?"},
+        {"text": "Woah! You startled me there. What would a snide little individual like you want with the great Hassan?"},
+        {"text": "I met your friend Omar, and he told me you had a \"sacred key\".",
+         "speaker": "player"},
+        {"text": "Oh really? Friend, huh. Is that what he tells people? Okay then, I'll help you, but only on one condition."},  # this is parsed as an f-string in the class
+        {"text": "Well, alright! What's that?",
+         "speaker": "player"},
+        {"text": "You bring me Omar, and let me have him. You see, me and him go way back. Best of friends, we were. Then, things got messy."},
+         {"text": "Why? What happened?",
+          "speaker": "player"},
+        {"text": "He betrayed me; tried to leave me for dead at the hands of goblins! But I escaped. So what'll it be? Me, or Omar?\n\nType a for me, and b for Omar. Choose wisely.",
+         "input": {
+             "validator": lambda v: v in ("a", "b"),  # only allow "a" or "b"
+             "save_to": "hassan_betray_choice",
+            "required_message": "You must type 'a' or 'b'!"}},
+        {"text": "Something feels off.",  # little hack
+         "speaker": "player",
+         "audio": "no"},
+        {"text": "Something feels off.",  # little hack
+        "speaker": "player",
+        "audio": "no"}
+            ]],
+     appended_dialogue_lines = [  # for first encounter
+         {"a": [{"text": "Okay. I'll see what I can do.",
+         "speaker": "player"},
+        {"text": "I thought so."},
+        {"text": "Bring me Omar; you'd better.", "audio": "no"}],
+        "b": [{"text": "I don't believe you. Omar would never!",
+         "speaker": "player"},
+        {"text": "Oh really? Well then. YOU PICKED WRONG!"},
+        {"text": "What?",
+         "speaker": "player", "audio": "no"}]},
+        {"a": [{"text": "I mean, you could've brought him alive at least. But... it wouldn't have made much of a difference. HA!"},  # second encounter
+        {"text": "You're welcome, I guess.",
+        "speaker": "player"},
+        {"text": "Here. Take my key. You've earned it.", "audio": "no"}]}
+        ],
+    prox1=20,
+    prox2=7,
+    chosen_adder="hassan_betray_choice"
+)
+
+As you can see, the dialogue is implemented by a massive system of nested dictionaries, including at the highest level full dialogues and at the lowest level individual strings, with each string encoding the speaker, whether audio should play and whether an input is required (more specifically, what exactly is required in that input to avoid security errors, and a message if an input is invalid).
+The exact way I implemented all of this can be seen in the `NPC` class.
+
+---
+
+These were just some examples of the technical hurdles in this project.
+
 ## Lessons Learned
 
-There are a few things I learned, one of which being that I should maintain multiple files always. My intention was to pack a full game into one file so that installation would be easy, but I understand now this precaution only led to difficulty in coding.  
+There are a few things I learned, one of which being that I should maintain multiple files always. My intention was to pack a full game into one file so that installation would be easy, but I understand now this precaution mostly led to difficulty in coding.  
 
-I also found that I should probably stick to using the intended tools for the job; Python's tkinter is not very fast, and for a 2D game, that was an issue.  
+I also found that I should probably stick to using the intended tools for the job; Python's `tkinter` is not very fast, and for a 2D game with many features, that was an issue.  
 
-It was a lot of fun to try to push tkinter to its limits though.
+It was a lot of fun to try to push `tkinter` to its limits though.
 
 The prompt for the hackathon was "Ripple Effect", which may give context on some game features and some points in the synopsis.
 
@@ -61,4 +170,4 @@ In general, the game has too many features to discuss in a short synopsis, but h
 
 ## Usage
 
-Clone the repository and run "The Soul of Etria.py". That is it.
+Clone the repository and run `The Soul of Etria.py`.
