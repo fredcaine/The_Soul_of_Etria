@@ -1,5 +1,8 @@
 # The Soul of Etria
 
+***The trailer and gameplay video is in `Trailer and Gameplay for The Soul of Etria.mp4` and is linked here:***
+***https://www.youtube.com/watch?v=vO8WVPTvnxw***
+
 Credits for this project go to:  
 Fredrick Farouk -- Solo Coder and Manager,  
 Hassan Saheb -- Main Spriter and Voice Actor, and  
@@ -16,8 +19,6 @@ This project took a lot of my time, roughly four hours per day for several weeks
 ---
 
 ## Technical Overview
-
-Many features in the game were at least somewhat challenging to implement, so here are some descriptions.
 
 ---
 
@@ -36,7 +37,7 @@ After, the biomes are converted into the colour of the cell on the world grid. T
 
 ### _SOUL_ and Rippling
 
-Rippling was quite complicated. To make it look good, I wanted the ripple to move through the ground to the enemy, which required several functions to avoid this glitching out terrain generation, and to allow collision detection with these ripples.
+I found rippling challenging. To make it look good, I wanted the ripple to move through the ground to the enemy, which required several functions to avoid this glitching out terrain generation, and to allow collision detection with these ripples.
 
 Making the inside of the change colours and zoom out was even more complicated, as in the same instance a certain biome could have two different colours. The key idea to resolve this was to generate a new map for the current chunk (with the updated soul colours) and pass that into the ripple. As the ripple moves, the old circumference (after the circumference expands) has every cell inside it be replaced from the map to the new map. This continues until the ripple reaches the farthest corner. The issue with this was a minor bug where moving into a different chunk while the ripple is active leads to the new map replacing the old map in the *wrong position*, leading to a visual bug. I decided that patching this would take up too much time that could be spent adding features.
 
@@ -50,7 +51,7 @@ Another instance of trigonometry helping out was (π+arctan2(dy,-dx))mod2π to f
 
 ### Sound and Event Handling
 
-Such a complex game was not meant to be made in `tkinter`, so lag was expected. However, since many different things were going on simultaneously, I needed to utilise `tkinter`'s after ID system. Essentially every moving object has its own after ID.
+`tkinter` was not built to handle games at this complexity, so lag was expected. However, since many different things were going on simultaneously, I needed to utilise `tkinter`'s after ID system. Essentially every moving object has its own after ID.
 
 Many issues arose from garbage collection not collecting things when I wanted it to, and forgetting to clear the after ID was one of the reasons for this. To solve this, I imported the `gc` module to tell me when things were still stored in memory.
 
@@ -161,7 +162,7 @@ The game contains many special features, such as:
 - The soundtrack AND game icon adapts to the player’s _SOUL_ level (explained below), reinforcing the game’s atmosphere,  
 - and many more.  
 
-The key feature of the game, as indicated by the title, is the "_SOUL_" feature. This is a "health bar" of sorts that sits at the top of the screen. The player's SOUL heavily affects generation with less water, hotter biomes, darker and redder colours, more dangerous surroundings and more enemies at lower _SOUL_.  
+The key feature of the game, as indicated by the title, is the "_SOUL_" feature. This is a "health bar" of sorts that sits at the top of the screen. The player's _SOUL_ heavily affects generation with less water, hotter biomes, darker and redder colours, more dangerous surroundings and more enemies at lower _SOUL_.  
 
 Further leaning into the "Ripple Effect", losing or gaining SOUL (from healing potions, etc.) sends out a "ripple". This is an effect that moves directly through the ground in a different colour depending on the player's current _SOUL_. It is difficult to describe in the email, however it is more clear in the trailer and the actual game. It serves as the player's main attack on bosses and enemies.
 
